@@ -3,7 +3,6 @@ package cmd
 import (
 	_ "embed"
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/johnnewcombe/System3-disk-util/globals"
@@ -12,16 +11,15 @@ import (
 
 const (
 	//TDOD: Update the help text here and within the commands
-	k_diskImageName   = "Name of the disk image file (*.img) to be used."
-	k_tracks          = "Number of tracks for the single sided disk (35, 40 or 80)."
-	k_volumeLabel     = "Volume Label of the disk as displayed in the catalogue."
-	k_volumeNumber    = "Volume Number Nof the disk as displayed in the catalogue."
-	k_bootOption      = "Set the Boot Option to true to create a bootable Flex system disk."
-	k_filenameLocal   = "The name of the local file to be processed."
-	k_filenameFlex    = "The name of the flex filename to process."
-	k_random          = "Indicates that the newly added file should be to be set as a random file within its directory entry."
-	k_loadAddress     = "The address where the file should be loaded into memory."
-	k_transferAddress = "The execute address."
+	k_diskImageName    = "Name of the disk image file (*.img) to be used."
+	k_tracks           = "Number of tracks for the single sided disk (35, 40 or 80)."
+	k_volumeLabel      = "Volume Label of the disk as displayed in the catalogue."
+	k_volumeNumber     = "Volume Number of the disk as displayed in the catalogue."
+	k_filenameLocalAdd = "The name of the local raw binary or Flex binary file to be added."
+	k_filenameFlexDel  = "The name of the flex filename to deleted from the disk."
+	k_filenameFlexGet  = "The name of the flex filename to be retrieved from the disk."
+	k_loadAddress      = "The address where the file should be loaded into memory."
+	k_transferAddress  = "The transfer (execute) address."
 )
 
 func init() {
@@ -44,7 +42,7 @@ func init() {
 
 	// add-binary-file
 	addBinaryFileCmd.Flags().StringP("disk-image-filename", "d", "", k_diskImageName)
-	addBinaryFileCmd.Flags().StringP("filename", "f", "", k_filenameLocal)
+	addBinaryFileCmd.Flags().StringP("filename", "f", "", k_filenameLocalAdd)
 	addBinaryFileCmd.Flags().Uint16P("load-address", "l", 0x100, k_loadAddress)
 	// NOTE the transfer address needs to be explicitly specified if required
 	addBinaryFileCmd.Flags().Uint16P("transfer-address", "t", 0xFFFF, k_transferAddress)
@@ -54,11 +52,11 @@ func init() {
 
 	// delete-file
 	deleteFileCmd.Flags().StringP("disk-image-filename", "d", "", k_diskImageName)
-	deleteFileCmd.Flags().StringP("filename", "f", "", k_filenameFlex)
+	deleteFileCmd.Flags().StringP("filename", "f", "", k_filenameFlexDel)
 
 	// get-file
 	getFileCmd.Flags().StringP("disk-image-filename", "d", "", k_diskImageName)
-	getFileCmd.Flags().StringP("filename", "f", "", k_filenameFlex)
+	getFileCmd.Flags().StringP("filename", "f", "", k_filenameFlexGet)
 
 	// validate
 	validateCmd.Flags().StringP("disk-image-filename", "d", "", k_diskImageName)
@@ -66,10 +64,7 @@ func init() {
 }
 
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, "Error: "+err.Error()+".")
-		os.Exit(1)
-	}
+	os.Exit(1)
 }
 
 var rootCmd = &cobra.Command{

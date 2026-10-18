@@ -11,7 +11,7 @@ import (
 
 var addBinaryFileCmd = &cobra.Command{
 	Use:   "add-binary-file",
-	Short: "Adds a raw or Flex binary file to the specified Acorn Flex single sided 35, 40 or 80 track disk image.",
+	Short: "Adds a raw binary or Flex binary file to the specified Acorn Flex disk image.",
 	Long: `Adds a binary file to the specified Acorn Flex single sided 35, 40 or 80 track disk image. 
 raw binary files are automatically converted to Flex CMD format files.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -74,7 +74,9 @@ raw binary files are automatically converted to Flex CMD format files.`,
 
 		// The file FLEX9.SYS is a special case and requires that the boot sector is linked to it.
 		if flexFilename == globals.BootSectorLink {
-			disk.LinkBootSector(flexFilename)
+			if err = disk.LinkBootSector(flexFilename); err != nil {
+				return fmt.Errorf("unable to link boot sector: %w", err)
+			}
 		}
 
 		if data, err = disk.ToByte(); err != nil {

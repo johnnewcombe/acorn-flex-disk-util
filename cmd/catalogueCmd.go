@@ -10,8 +10,8 @@ import (
 
 var catalogueCmd = &cobra.Command{
 	Use:   "cat",
-	Short: "Displays disk and catalogue information.",
-	Long:  `Displays disk and catalogue information.`,
+	Short: "Displays the disk and catalogue information.",
+	Long:  `Displays the disk and catalogue information of the disk image.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		var (

@@ -11,8 +11,10 @@ import (
 
 var newDiskCmd = &cobra.Command{
 	Use:   "new-disk",
-	Short: "Creates a blank Acorn Flex single sided 35, 40 or 80 track disk image.",
-	Long:  `Creates a blank Acorn Flex single sided 35, 40 or 40 or 80 track disk image.`,
+	Short: "Creates a blank Acorn Flex disk image.",
+	Long: `Creates a blank Acorn Flex single sided 35, 40 or 40 or 80 track disk image.
+The boot sector contains the Acorn Flex bootloader code in an unlinked state, however if the
+file being added is FLEX9.CMD then this will automatically be linked, making the disk bootable.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		var (

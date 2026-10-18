@@ -10,7 +10,7 @@ import (
 
 var deleteFileCmd = &cobra.Command{
 	Use:   "delete-file",
-	Short: "Deletes a file from the specified Acorn Flex single sided 35, 40 or 80 track disk image.",
+	Short: "Deletes a file from the specified Acorn Flex disk image.",
 	Long:  `Deletes a file from the specified Acorn Flex single sided 35, 40 or 80 track disk image.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 

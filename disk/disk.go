@@ -107,7 +107,9 @@ func (d *Disk) Load(diskImage []byte) error {
 			//data sectors
 			// get linked sector id
 			datasector := new(DataSector)
-			datasector.Load(sector)
+			if err = datasector.Load(sector); err != nil {
+				return fmt.Errorf("unable to read data sector: %w", err)
+			}
 			d.DataSectors = append(d.DataSectors, datasector)
 		}
 
@@ -160,7 +162,7 @@ func (d *Disk) AddBinaryFile(filename string, fileData []byte, loadAddress uint1
 		err          error
 	)
 
-	// ---- 1. Validate the name ----------------------------------------------------
+	// validate the name
 	name, ext, err := splitFlexName(filename)
 	if err != nil {
 		return err
@@ -169,7 +171,7 @@ func (d *Disk) AddBinaryFile(filename string, fileData []byte, loadAddress uint1
 		return fmt.Errorf("file %s.%s already exists, delete old file first", name, ext)
 	}
 
-	// ---- 2. Produce FLEX binary data -----------------------------------------------
+	// produce FLEX binary data
 	if len(fileData) == 0 {
 		return errors.New("file is empty")
 	}
@@ -186,7 +188,7 @@ func (d *Disk) AddBinaryFile(filename string, fileData []byte, loadAddress uint1
 		}
 	}
 
-	// ---- 3. Make sure nothing overruns the utility command space ($C100-$C6FF) ----
+	// make sure nothing overruns the utility command space ($C100-$C6FF)
 	segments, _, err := ParseFlexBinary(flexFileData)
 	if err != nil {
 		return fmt.Errorf("invalid FLEX binary: %w", err)
@@ -200,7 +202,7 @@ func (d *Disk) AddBinaryFile(filename string, fileData []byte, loadAddress uint1
 		}
 	}
 
-	// ---- 4. Work out the space needed and check it is available --------------------
+	// work out the space needed and check it is available
 	// round up: a partly filled last sector still needs a whole sector
 	sectorsNeeded := (len(flexFileData) + flexDataPerSector - 1) / flexDataPerSector
 
@@ -214,7 +216,7 @@ func (d *Disk) AddBinaryFile(filename string, fileData []byte, loadAddress uint1
 	}
 	dirIndex := dirSectorId - globals.DirectoryStartSector
 
-	// ---- 5. Walk the free chain and reserve the sectors (nothing is changed yet) ---
+	// walk the free chain and reserve the sectors (nothing is changed yet)
 	allocated := make([]*DataSector, 0, sectorsNeeded)
 	allocatedIds := make([]int, 0, sectorsNeeded)
 
@@ -237,7 +239,7 @@ func (d *Disk) AddBinaryFile(filename string, fileData []byte, loadAddress uint1
 	// free chain. It must be captured here, before that link is set to 0,0 below.
 	nextFreeTrack, nextFreeSector := t, s
 
-	// ---- 6. Write the data into the reserved sectors -------------------------------
+	// write the data into the reserved sectors
 	for i, sector := range allocated {
 		start := i * flexDataPerSector
 		end := min(start+flexDataPerSector, len(flexFileData))
@@ -252,7 +254,7 @@ func (d *Disk) AddBinaryFile(filename string, fileData []byte, loadAddress uint1
 	last := allocated[len(allocated)-1]
 	last.NextTrack, last.NextSector = 0, 0 // end of this file's chain
 
-	// ---- 7. Directory entry --------------------------------------------------------
+	// directory entry
 	firstTrack, firstSector := getSectorAddress(allocatedIds[0])
 	lastTrack, lastSector := getSectorAddress(allocatedIds[len(allocatedIds)-1])
 	day, month, year := GetFlexDate()
@@ -264,11 +266,11 @@ func (d *Disk) AddBinaryFile(filename string, fileData []byte, loadAddress uint1
 	entry.EndTrack, entry.EndSector = lastTrack, lastSector
 	entry.TotalSectors = sectorsNeeded
 	entry.RandomFileFlag = 0 // binary files are always sequential
-	entry.Month = int(month)
+	entry.Month = month
 	entry.Day = day
 	entry.Year = year
 
-	// ---- 8. System information record ----------------------------------------------
+	// system information record
 	d.SystemInfo.NumberFreeSectors -= sectorsNeeded
 	d.SystemInfo.FirstFreeTrack, d.SystemInfo.FirstFreeSector = nextFreeTrack, nextFreeSector
 	if nextFreeTrack == 0 && nextFreeSector == 0 {

@@ -12,13 +12,13 @@ Usage:
   disk-util [command]
 
 Available Commands:
-  add-binary-file Adds a raw or Flex binary file to the specified Acorn Flex single sided 35, 40 or 80 track disk image.
-  cat             Displays disk and catalogue information.
+  add-binary-file Adds a raw binary or Flex binary file to the specified Acorn Flex disk image.
+  cat             Displays the disk and catalogue information.
   completion      Generate the autocompletion script for the specified shell
-  delete-file     Deletes a file from the specified Acorn Flex single sided 35, 40 or 80 track disk image.
-  get-file        Gets a file from the specified Acorn Flex single sided 35, 40 or 80 track disk image.
+  delete-file     Deletes a file from the specified Acorn Flex disk image.
+  get-file        Gets a file from the specified Acorn Flex disk image.
   help            Help about any command
-  new-disk        Creates a blank Acorn Flex single sided 35, 40 or 80 track disk image.
+  new-disk        Creates a blank Acorn Flex disk image.
   validate        Check the structure of a FLEX disk image
   validate        Check the structure of a FLEX disk image
   version         Displays the program version.
@@ -40,16 +40,16 @@ Usage:
 
 Flags:
   -d, --disk-image-filename string   Name of the disk image file (*.img) to be used.
-  -f, --filename string              The name of the local file to be processed.
+  -f, --filename string              The name of the local raw binary or Flex binary file to be added.
   -h, --help                         help for add-binary-file
   -l, --load-address uint16          The address where the file should be loaded into memory. (default 256)
-  -t, --transfer-address uint16      The execute address. (default 65535)
+  -t, --transfer-address uint16      The transfer (execute) address. (default 65535)
 ```
 
 ## Catalogue
 
 ```text
-Displays disk and catalogue information.
+Displays the disk and catalogue information of the disk image.
 
 Usage:
   disk-util cat [flags]
@@ -69,21 +69,26 @@ Usage:
 
 Flags:
   -d, --disk-image-filename string   Name of the disk image file (*.img) to be used.
-  -f, --filename string              The name of the flex filename to process.
+  -f, --filename string              The name of the flex filename to deleted from the disk.
   -h, --help                         help for delete-file
 ```
 
 ## Get File
 
 ```text
-Deletes a file from the specified Acorn Flex single sided 35, 40 or 80 track disk image.
+Gets a file from the specified Acorn Flex single sided 35, 40 or 80 track disk image and stores.
+A local path can be specified with the flex filename to store the retrieved file to a local directory other 
+than the current directory.
+
+e.g.
+  specifying '/temp/disks/DIR.CMD' will get the DIR.CMD from the disk image and store it in '/temp/disks' .
 
 Usage:
   disk-util get-file [flags]
 
 Flags:
   -d, --disk-image-filename string   Name of the disk image file (*.img) to be used.
-  -f, --filename string              The name of the flex filename to process.
+  -f, --filename string              The name of the flex filename to be retrieved from the disk.
   -h, --help                         help for get-file
 ```
 
@@ -100,7 +105,7 @@ Flags:
   -h, --help                         help for new-disk
   -t, --tracks int                   Number of tracks for the single sided disk (35, 40 or 80). (default 80)
   -v, --volume-label string          Volume Label of the disk as displayed in the catalogue. (default "ACORNFLEX")
-  -n, --volume-number int            Volume Number Nof the disk as displayed in the catalogue. (default 1)
+  -n, --volume-number int            Volume Number of the disk as displayed in the catalogue. (default 1)
 ```
 
 ## Validate

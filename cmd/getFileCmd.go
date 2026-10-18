@@ -9,8 +9,14 @@ import (
 
 var getFileCmd = &cobra.Command{
 	Use:   "get-file",
-	Short: "Gets a file from the specified Acorn Flex single sided 35, 40 or 80 track disk image.",
-	Long:  `Deletes a file from the specified Acorn Flex single sided 35, 40 or 80 track disk image.`,
+	Short: "Gets a file from the specified Acorn Flex disk image.",
+	Long: `Gets a file from the specified Acorn Flex single sided 35, 40 or 80 track disk image and stores.
+A local path can be specified with the flex filename to store the retrieved file to a local directory other 
+than the current directory.
+
+e.g.
+  specifying '/temp/disks/DIR.CMD' will get the DIR.CMD from the disk image and store it in '/temp/disks' .
+`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		var (
