@@ -26,30 +26,6 @@ var newDiskCmd = &cobra.Command{
 			catalogue         string
 		)
 
-		/*
-			// ===================================================================================
-			// TODO temp code - remove
-			// ===================================================================================
-
-
-			tmpFileName := "BLANK_FORMATTED_35.img"
-			tmpSize := 0x15e00
-
-				var tmpData = []byte{}
-
-				data, _ = os.ReadFile(tmpFileName)
-				for i, b := range data {
-					if i >= tmpSize {
-						break
-					}
-					tmpData = append(tmpData, b)
-				}
-				if err = os.WriteFile("NEW_"+tmpFileName, tmpData, 0644); err != nil {
-					return err
-				}
-				// ===================================================================================
-		*/
-
 		// get parameters
 		if diskImageFilename, err = cmd.Flags().GetString("disk-image-filename"); err != nil {
 			return err

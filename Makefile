@@ -14,6 +14,9 @@ build:
 	env GOOS=linux GOARCH=arm64  go build -o ./bin/linux-arm64/$(name) .
 	env GOOS=linux GOARCH=arm  go build -o ./bin/linux-arm/$(name) .
 
+	# Create the README.md file automatically
+	./build-readme.sh > README.md
+
 	# just for local machine convenience
 	cp ./bin/linux-amd64/$(name) ../Flex_Prestel/tools
 
