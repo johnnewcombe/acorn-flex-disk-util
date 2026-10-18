@@ -1,22 +1,8 @@
-# Notes:
+# Acorn System 3 Flex Disk Utility
 
+This utility allows for a simple editing of Acorn System 35, 40 and 80 track single sided Flex disk images. The utility
+is designed for use with the Acorn System 3 6809 based Flex computer.
 
-Linking the first boot sector involves setting the 6th and 7 (bytes 5 and 6) to the start track and start sector of FLEX9.SYS. 
-This value can be retrieved from the directory entry for FLEX9.SYS.
-
-The initial values for the boot sector, i.e. before linking are track 0 sector 1 e.g. 00 01
-
-Note that the oriinal Acorn Formatter only formats the first 35 tracks.
-
-# System3 Disk Utility
-
-
-This utility allows for a simple editing of Acorn System 40 track and 80 track single sided disk images. 
-Acorn System disk images are subtly different to Acorn BBC disk images in that all entries are in a 
-directory " " (space), disks do not have a cycle number, and files do not have bits 16 and 17 of load and
-execution addresses.
-
-Note that this utility only supports single sided (.ssd) 40 or 80 track disk images.
 
     Usage:
     disk-util [command]
@@ -45,11 +31,9 @@ Creates a blank Acorn System single sided 40 or 80 track disk image.
         --title            string  Title of the disk as displayed in the catalogue.
     -t, --tracks           int     Number of tracks for the single sided disk (40 or 80). (default 40)
 
-
 The following example creates a 40 track disk image called _mydisk.ssd_ with a title of "Utils".
 
     disk-util create-disk -d mydisk.ssd --title Utils
-
 
 ## Add File
 
@@ -70,11 +54,10 @@ The following example adds a file called _somepath/basic.bin_ with a title of "U
 
 ### A note about filenames...
 
-To keep things simple, the destination filename is derived from the specified filename. 
-It will be an upper case version of the source name, however, any path will be removed as 
-will the extension. Therefore, in the above example _somepath/basic.bin_ becomes _BASIC_ on the disk image. 
-This means that the main element of the source file name i.e._basic_ must conform to the filename spec of 
-Acorn System DOS and be 7 characters or less.
+To keep things simple, the destination filename is derived from the specified filename. It will be an upper case version
+of the source name, however, any path will be removed as will the extension. Therefore, in the above example
+_somepath/basic.bin_ becomes _BASIC_ on the disk image. This means that the main element of the source file name i.e.
+_basic_ must conform to the filename spec of Acorn System DOS and be 7 characters or less.
 
 ## Info
 
@@ -106,4 +89,5 @@ The output will look something like the following.
     01 BASIC   C000 C2B2 1000 00D
     --------------------------------------------------------------------
 
-The values shown following the filename represent the load address, execution address, length and start sector respectively.
+The values shown following the filename represent the load address, execution address, length and start sector
+respectively.
